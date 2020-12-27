@@ -1,0 +1,191 @@
+<html>
+	<head>
+		<title>Database</title>
+
+		<meta charset = "utf-8">
+
+		<meta name = "author" content = "CriShoux">
+		<meta name = "description" content = "Database for the Roblox game, City of Vancouver">
+		<meta name = "keywords" content = "CriShoux, Roblox, City of Vancouver, Roblox VPD">
+
+		<meta property = "og:title" content = "Database">
+		<meta property = "og:description" content = "Database for the Roblox game, City of Vancouver">
+		<meta property = "og:type" content = "website">
+
+		<style>
+			body {
+				background-color: rgb(25, 25, 25);
+                color: white;
+                font-family: "Trebuchet MS";
+			}
+
+			#main {
+				margin: 20px auto 0 auto;
+				width: 40%;
+				height: 75%;
+			}
+
+			#info {
+				margin-top: 20px;
+			}
+
+			#upperInfo {
+				margin-left: 200px;
+			}
+
+			img {
+				float: left;
+			}
+
+			#container {
+				display: flex;
+				margin-top: 65px;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			li {
+				margin-top: 6px;
+			}
+
+			button {
+				background-color: rgb(30, 30, 30);
+				color: white;
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-radius: 5px;
+				padding: 5px;
+				cursor: pointer;
+			}
+
+			input {
+				background: rgb(25, 25, 25);
+				color: white;
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				font-size: 15px;
+				width: 100%;
+				height: 35px;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main">
+			<input id="usernameInput" type="text" placeholder="Roblox Username">
+
+			<div id="info" hidden>
+				<img id="userImage" src="https://i.pinimg.com/originals/6a/f1/ec/6af1ec6645410a41d5339508a83b86f9.png" alt="Roblox Avatar Image" width="180" height="180">
+
+				<div id="upperInfo">
+					<p id="username">Username</p>
+					<p id="arrests">Arrests:</p>
+					<p id="citations">Citations:</p>
+					<p id="warrant">Warrant:</p>
+				</div>
+
+				<div id="container">
+					<div>
+						<p style="margin-left: 40px;">Arrests:</p>
+						<ul id="arrestsList">
+							<li hidden><button>Arrest</button></li>
+						</ul>
+					</div>
+
+					<div>
+						<p style="margin-left: 40px;">Citations:</p>
+						<ul id="citationsList">
+							<li hidden><button>Citation</button></li>
+						</ul>
+					</div>
+				</div>
+				
+				<br>
+
+				<p id="description" hidden></p>
+			</div>
+		</div>
+
+		<script>
+			const usernameInput = document.getElementById('usernameInput');
+			const info = document.getElementById('info');
+			const userImage = document.getElementById('userImage');
+			const username = document.getElementById('username');
+			const arrests = document.getElementById('arrests');
+			const citations = document.getElementById('citations');
+			const warrant = document.getElementById('warrant');
+			const arrestsList = document.getElementById('arrestsList');
+			const citationsList = document.getElementById('citationsList');
+			const listElement = document.getElementsByTagName('li')[0];
+			const description = document.getElementById('description');
+
+			const loadPlayerData = async searchUsername => {
+				try {
+					let data = await fetch(`https://roblox-vancouver-database.herokuapp.com/${searchUsername}`);
+					data = await data.json();
+
+					userImage.src = `https://www.roblox.com/bust-thumbnail/image?userId=${data.userID}&width=180&height=180&format=png`;
+					
+					username.innerText = data.username;
+
+					let arrestsJson = data.arrests;
+					arrests.innerText = `Arrests: ${arrestsJson ? arrestsJson.length : '0'}`;
+
+					let citationsJson = data.citations;
+					citations.innerText = `Citations: ${citationsJson ? citationsJson.length : '0'}`;
+
+					let hasWarrant = data.warrant;
+					warrant.innerText = `Warrant: ${hasWarrant ? hasWarrant : 'No'}`;
+
+					while (arrestsList.children.length > 1) {
+						arrestsList.children[arrestsList.children.length - 1].remove();
+					}
+
+					while (citationsList.children.length > 1) {
+						citationsList.children[citationsList.children.length - 1].remove();
+					}
+
+					if (arrestsJson) {
+						for (let arrestInfo of arrestsJson) {
+							let arrestListElement = listElement.cloneNode(true);
+							let btn = arrestListElement.firstChild;
+							btn.innerText = `[${arrestInfo[2]}s] ${arrestInfo[0]}`;
+							btn.onclick = () => {
+								description.innerText = arrestInfo[1];
+								description.hidden = false;
+							}
+							arrestListElement.hidden = false;
+							arrestsList.appendChild(arrestListElement);
+						}
+					}
+
+					if (citationsJson) {
+						for (let citationInfo of citationsJson) {
+							let citationListElement = listElement.cloneNode(true);
+							let btn = citationListElement.firstChild;
+							btn.innerText = `[$${citationInfo[2]}] ${citationInfo[0]}`;
+							btn.onclick = () => {
+								description.innerText = citationInfo[1];
+								description.hidden = false;
+							}
+							citationListElement.hidden = false;
+							citationsList.appendChild(citationListElement);
+						}
+					}
+
+					info.hidden = false;
+				} catch(err) {
+					console.error(err);
+				}
+			}
+
+			usernameInput.onkeypress = e => {
+				if (e.key == 'Enter' || e.keyCode == 13) {
+					description.innerText = '';
+					description.hidden = true;
+					loadPlayerData(usernameInput.value);
+				}
+			}
+		</script>
+	</body>
+</html>
