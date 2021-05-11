@@ -121,7 +121,7 @@
 
 			const loadPlayerData = async searchUsername => {
 				try {
-					let data = await fetch(`https://shoux-servers.herokuapp.com/roblox-vancouver-database/${searchUsername}`);
+					let data = await fetch(`https://shoux-servers.herokuapp.com/vancouver-database/${searchUsername}`);
 					data = await data.json();
 
 					userImage.src = `https://www.roblox.com/bust-thumbnail/image?userId=${data.userID}&width=180&height=180&format=png`;
