@@ -145,7 +145,7 @@
 
 			const loadPlayerData = async searchUsername => {
 				try {
-					let data = await fetch(`https://shoux-servers.herokuapp.com/roblox-vancouver-database/${searchUsername}`, {
+					let data = await fetch(`https://shoux-servers2.herokuapp.com/roblox-vancouver-database/${searchUsername}`, {
 						method: 'POST',
 						body: JSON.stringify({
 							captchaResponse: grecaptcha.getResponse()
