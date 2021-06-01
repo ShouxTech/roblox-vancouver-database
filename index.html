@@ -25,6 +25,10 @@
 				height: 75%;
 			}
 
+			#g-recaptcha {
+				margin-top: 8px;
+			}
+
 			#info {
 				margin-top: 20px;
 			}
@@ -69,10 +73,28 @@
 				text-align: center;
 			}
 		</style>
+
+		<script>
+			const captcha = document.getElementById('g-recaptcha');
+
+			function captchaCallback() {
+				captcha.hidden = true;
+			}
+
+			function onloadCallback() {
+				grecaptcha.render(captcha, {
+					sitekey: '6LeS7QYbAAAAAPm3ji2kcWbnYxVGFkpYnOFXhkMC',
+					theme: 'dark',
+					callback: captchaCallback
+				});
+				console.log('Captcha ready.');
+			}
+		</script>
 	</head>
 	<body>
 		<div id="main">
 			<input id="usernameInput" type="text" placeholder="Roblox Username">
+			<div id="g-recaptcha"></div>
 
 			<div id="info" hidden>
 				<img id="userImage" src="https://i.pinimg.com/originals/6a/f1/ec/6af1ec6645410a41d5339508a83b86f9.png" alt="Roblox Avatar Image" width="180" height="180">
@@ -106,6 +128,8 @@
 			</div>
 		</div>
 
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+
 		<script>
 			const usernameInput = document.getElementById('usernameInput');
 			const info = document.getElementById('info');
@@ -121,7 +145,12 @@
 
 			const loadPlayerData = async searchUsername => {
 				try {
-					let data = await fetch(`https://shoux-servers2.herokuapp.com/roblox-vancouver-database/${searchUsername}`);
+					let data = await fetch(`https://shoux-servers.herokuapp.com/roblox-vancouver-database/${searchUsername}`, {
+						method: 'POST',
+						body: JSON.stringify({
+							captchaResponse: grecaptcha.getResponse()
+						})
+					});
 					data = await data.json();
 
 					userImage.src = `https://www.roblox.com/bust-thumbnail/image?userId=${data.userID}&width=180&height=180&format=png`;
