@@ -73,23 +73,6 @@
 				text-align: center;
 			}
 		</style>
-
-		<script>
-			const captcha = document.getElementById('g-recaptcha');
-
-			function captchaCallback() {
-				captcha.hidden = true;
-			}
-
-			function onloadCallback() {
-				grecaptcha.render(captcha, {
-					sitekey: '6LeS7QYbAAAAAPm3ji2kcWbnYxVGFkpYnOFXhkMC',
-					theme: 'dark',
-					callback: captchaCallback
-				});
-				console.log('Captcha ready.');
-			}
-		</script>
 	</head>
 	<body>
 		<div id="main">
@@ -127,6 +110,23 @@
 				<p id="description" hidden></p>
 			</div>
 		</div>
+
+		<script>
+			const captcha = document.getElementById('g-recaptcha');
+
+			function captchaCallback() {
+				captcha.hidden = true;
+			}
+
+			function onloadCallback() {
+				grecaptcha.render(captcha, {
+					sitekey: '6LeS7QYbAAAAAPm3ji2kcWbnYxVGFkpYnOFXhkMC',
+					theme: 'dark',
+					callback: captchaCallback
+				});
+				console.log('Captcha ready.');
+			}
+		</script>
 
 		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 
