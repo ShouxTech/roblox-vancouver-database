@@ -147,6 +147,9 @@
 				try {
 					let data = await fetch(`https://shoux-servers2.herokuapp.com/roblox-vancouver-database/${searchUsername}`, {
 						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
 						body: JSON.stringify({
 							captchaResponse: grecaptcha.getResponse()
 						})
