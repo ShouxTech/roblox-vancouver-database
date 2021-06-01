@@ -131,6 +131,8 @@
 		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 
 		<script>
+			const URL = 'https://shoux-servers2.herokuapp.com/roblox-vancouver-database/';
+
 			const usernameInput = document.getElementById('usernameInput');
 			const info = document.getElementById('info');
 			const userImage = document.getElementById('userImage');
@@ -143,9 +145,14 @@
 			const listElement = document.getElementsByTagName('li')[0];
 			const description = document.getElementById('description');
 
-			const loadPlayerData = async searchUsername => {
+			async function setDescription(text) {
+				description.innerText = text;
+				description.hidden = false;
+			}
+
+			async function loadPlayerData(searchUsername) {
 				try {
-					let data = await fetch(`https://shoux-servers2.herokuapp.com/roblox-vancouver-database/${searchUsername}`, {
+					let data = await fetch(`${URL}${searchUsername}`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'
@@ -183,8 +190,7 @@
 							let btn = arrestListElement.firstChild;
 							btn.innerText = `[${arrestInfo[2]}s] ${arrestInfo[0]}`;
 							btn.onclick = () => {
-								description.innerText = arrestInfo[1];
-								description.hidden = false;
+								setDescription(arrestInfo[1]);
 							}
 							arrestListElement.hidden = false;
 							arrestsList.appendChild(arrestListElement);
@@ -197,8 +203,7 @@
 							let btn = citationListElement.firstChild;
 							btn.innerText = `[$${citationInfo[2]}] ${citationInfo[0]}`;
 							btn.onclick = () => {
-								description.innerText = citationInfo[1];
-								description.hidden = false;
+								setDescription(citationInfo[1]);
 							}
 							citationListElement.hidden = false;
 							citationsList.appendChild(citationListElement);
@@ -207,6 +212,7 @@
 
 					info.hidden = false;
 				} catch(err) {
+					setDescription('There was an error processing your request. Try refreshing this page.');
 					console.error(err);
 				}
 			}
