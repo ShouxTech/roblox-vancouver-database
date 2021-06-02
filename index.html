@@ -131,6 +131,7 @@
 
 		<script>
 			const URL = 'https://shoux-servers2.herokuapp.com/roblox-vancouver-database/';
+			const SOCKET_URL = 'wss://shoux-servers2.herokuapp.com/roblox-vancouver-database/';
 
 			const usernameInput = document.getElementById('usernameInput');
 			const info = document.getElementById('info');
@@ -143,6 +144,8 @@
 			const citationsList = document.getElementById('citationsList');
 			const listElement = document.getElementsByTagName('li')[0];
 			const description = document.getElementById('description');
+
+			let connectionID;
 
 			async function setDescription(text) {
 				description.innerText = text;
@@ -215,6 +218,12 @@
 					console.error(err);
 				}
 			}
+
+			(new WebSocket(SOCKET_URL)).onmessage = (event) => {
+				console.log('Message from server ', event.data);
+				connectionID = event.data;
+				console.log(connectionID);
+			};
 
 			usernameInput.onkeypress = e => {
 				if (e.key == 'Enter' || e.keyCode == 13) {
