@@ -160,7 +160,8 @@
 							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify({
-							captchaResponse: grecaptcha.getResponse()
+							captchaResponse: grecaptcha.getResponse(),
+							connectionID: connectionID
 						})
 					});
 					data = await data.json();
@@ -220,7 +221,6 @@
 			}
 
 			(new WebSocket(SOCKET_URL)).onmessage = (event) => {
-				console.log('Message from server ', event.data);
 				connectionID = event.data;
 				console.log(connectionID);
 			};
