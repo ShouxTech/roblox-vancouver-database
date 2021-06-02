@@ -222,7 +222,6 @@
 
 			(new WebSocket(SOCKET_URL)).onmessage = (event) => {
 				connectionID = event.data;
-				console.log(connectionID);
 			};
 
 			usernameInput.onkeypress = e => {
